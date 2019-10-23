@@ -1,0 +1,22 @@
+Toy Runtime 简单介绍
+====================
+目前华为开放出的方舟编译器只有编译器本身，并非完整的工具链。
+  - 可以从Java代码生成AArch64可重定位汇编，兼容 GNU AS 格式。所以我们可以通过
+    aarch64 gnu assembler得到可重定位的ELF obj 文件。
+  - 而当执行二进制时，需要该二进制文件完全链接，即通过静态和动态的库等完成符号
+    地址解析等。同时需要一个 loader 能理解方舟编译器代码生成的ABI，比如程序入
+    口地址等。
+
+该 toy runtime 的输入设计为方舟编译器生成的汇编文本文件，我们通过一下步骤完成
+简单的执行:
+  - 采用 aarch64-gnu-linux-as 对方舟生成的文本 .s 进行汇编， 成可重定位的 .o
+    文件。
+  - 'pacific' 是一个在传统的Linux 动态连接器 ld.so 之上的另外一层 loader 封装
+    主要的任务是对方舟的 .o 进行各种 "fake relocation"，将一些 runtime 函数调用
+    重定位到stub函数。
+  - 对于面向对象语言来说，.o 的重定位对象主要跟 class 的成员变量和函数相关。
+    所以从理论上来说，只要我们能精确的知道 Java 的对象模型，就可以真正的完成
+    重定位。比如 pacific.c 里面的 special_section_hack 函数就是对
+    System.out.println 完成重定位。
+
+从方舟的 mplcg 选项来看， 方舟实现了自己的 linker 和 runtime，而且功能很完善，我们期待华为开放完整的方舟工具链。
