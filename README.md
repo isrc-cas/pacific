@@ -10,13 +10,28 @@ PLCT实验室全称是程序语言与编译技术实验室，
 
 本项目采用 Apache 协议。
 
-## 编译 pacific
+TODO：确认方舟编译器使用的木兰协议跟Apache协议的相容性。
 
-首先，确保已经安装了 aarch64 gnu linux 工具链。比如在 Ubuntu 18.04 上，可以执行 apt-get install gcc-8-aarch64-linux-gnu。
+## 编译 pacific (Ubuntu 18.04)
+1、安装 aarch64 gnu linux 工具链
+  可以使用： apt-get install gcc-8-aarch64-linux-gnu，安装aarch64 gnu linux 工具链。
+2、安装aarch64 qemu
+  可以通过运行 pacific/script/build-qemu-aarch64.sh来安装，或者通过 make aarch64-qemu 来安装。
+3、编译pacific
+  执行 make 或者 make pacific 即会编译出 pacific。
 
-其次，确保你安装了 aarch64 qemu。可以通过 make aarch64-qemu 来安装。
-
-二者安装完毕后执行 make 或者 make pacific 即会编译出 pacific。
+## 编译 pacific (Ubuntu 16.04)
+1、安装 aarch64 gnu linux 工具链
+  可以使用： apt-get install gcc-aarch64-linux-gnu，安装aarch64 gnu linux 工具链。
+2、安装aarch64 qemu
+  可以通过运行 pacific/script/build-qemu-aarch64.sh来安装，或者通过 make aarch64-qemu 来安装。
+3、代码修改
+  将Makefile之中的“CROSS_AARCH64_GCC = aarch64-linux-gnu-gcc-8”修改为“CROSS_AARCH64_GCC = aarch64-linux-gnu-gcc”。
+  将src/pacific/pacific.c中591行的“  for (int idx = 0; idx < num; idx++) {”，修改为：
+  “int idx;
+  for (idx = 0; idx < num; idx++) {”。
+4、编译pacific
+  执行 make 或者 make pacific 即会编译出 pacific。
 
 ## 运行 pacific
 

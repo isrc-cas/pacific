@@ -2,20 +2,20 @@
 
 top_dir = $(shell pwd)
 
-CROSS_AARCH64_GCC = aarch64-linux-gnu-gcc-8
-CROSS_AARCH64_QEMU = $(top_dir)/install/bin/qemu-aarch64
+CROSS_AARCH64_GCC ?= aarch64-linux-gnu-gcc-8
+CROSS_AARCH64_QEMU ?= $(top_dir)/install/bin/qemu-aarch64
 
-ENTRY_ADDR = LHelloWorld_3B_7Cmain_7C_28ALjava_2Flang_2FString_3B_29V
+ENTRY_ADDR ?= LHelloWorld_3B_7Cmain_7C_28ALjava_2Flang_2FString_3B_29V
 
 V ?= 0
 
 Q ?= @
 
-aarch64-qemu: $(top_dir)/install/bin/qemu-aarch64
+aarch64-qemu:
 	bash $(top_dir)/script/build-qemu-aarch64.sh
 
 pacific:
-	$(CROSS_AARCH64_GCC) -O2 \
+	$(CROSS_AARCH64_GCC) -O2 -std=gnu99 \
 	-Wl,-rpath=$(top_dir)/prebuilt/aarch64 \
 	-Wl,-dynamic-linker=$(top_dir)/prebuilt/aarch64/ld-linux-aarch64.so.1 \
 	$(top_dir)/src/pacific.c -o $(top_dir)/src/pacific
